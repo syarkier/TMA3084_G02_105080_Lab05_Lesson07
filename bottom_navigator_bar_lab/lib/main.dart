@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'screen1.dart';
+import 'screen2.dart';
+import 'screen3.dart';
+import 'screen4.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -24,14 +29,44 @@ class BottomNavLab extends StatefulWidget {
 }
 
 class _BottomNavLabState extends State<BottomNavLab> {
+  int currentIndex = 0;
+
+  final List<Widget> screens = const [
+    Screen1(),
+    Screen2(),
+    Screen3(),
+    Screen4(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lab 05: Exercise A'),
+
+        title: const Text('Bottom Navigation Bar'),
         backgroundColor: Colors.blue,
       ),
-      body: const Center(child: Text('Starter')),
+      body: screens[currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.blue,
+        currentIndex: currentIndex,
+        onTap: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.alarm), label: 'Alarm'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            label: 'Business',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.school), label: 'School'),
+        ],
+      ),
+
     );
   }
 }
