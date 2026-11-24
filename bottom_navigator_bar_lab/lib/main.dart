@@ -17,8 +17,9 @@ class TabModel extends ChangeNotifier {
 
   int get currentIndex => _currentIndex;
 
-  void setIndex(int index) {
+  void selectTab(int index) {
     if (index == _currentIndex) return;
+    if (index < 0 || index >= BottomNavLab.screens.length) return;
     _currentIndex = index;
     notifyListeners();
   }
@@ -48,31 +49,47 @@ class BottomNavLab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentIndex = context.watch<TabModel>().currentIndex;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bottom Navigation Bar'),
         backgroundColor: Colors.blue,
       ),
-      body: screens[currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue,
-        currentIndex: currentIndex,
-        onTap: (index) {
-          context.read<TabModel>().setIndex(index);
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.alarm), label: 'Alarm'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.school), label: 'School'),
-        ],
-      ),
+      body: const TabBody(),
+      bottomNavigationBar: const TabNavBar(),
+    );
+  }
+}
+
+class TabBody extends StatelessWidget {
+  const TabBody({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final currentIndex = context.watch<TabModel>().currentIndex;
+    return BottomNavLab.screens[currentIndex];
+  }
+}
+
+class TabNavBar extends StatelessWidget {
+  const TabNavBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final currentIndex = context.watch<TabModel>().currentIndex;
+
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: Colors.blue,
+      currentIndex: currentIndex,
+      onTap: (index) {
+        context.read<TabModel>().selectTab(index);
+      },
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.alarm), label: 'Alarm'),
+        BottomNavigationBarItem(icon: Icon(Icons.business), label: 'Business'),
+        BottomNavigationBarItem(icon: Icon(Icons.school), label: 'School'),
+      ],
     );
   }
 }
